@@ -30,11 +30,11 @@ public class TestDataService implements FoodDeliveryDataService {
     @Override
     public List<Comanda> readComenzi() {
         List<Comanda> comenzi = new ArrayList<>();
-        comenzi.add(new Comanda(1, 3, 2));
+        comenzi.add(new Comanda(1, 3, 2, Comanda.StatusComanda.FINALIZATA));
         comenzi.get(0).adaugaProdus("Shaorma cu de toate mica", 2);
         comenzi.get(0).adaugaProdus("Pepsi", 1);
 
-        comenzi.add(new Comanda(1, 3, 2));
+        comenzi.add(new Comanda(1, 3));
         comenzi.get(1).adaugaProdus("Limonada cu menta", 2);
         comenzi.get(1).adaugaProdus("Shaorma cu de toate mare", 1);
         comenzi.get(1).adaugaProdus("Shaorma cu de toate mica", 3);

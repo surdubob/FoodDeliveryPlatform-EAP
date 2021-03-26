@@ -4,6 +4,7 @@ import javax.sound.midi.MidiChannel;
 import java.io.IOException;
 import java.sql.Connection;
 import java.sql.Driver;
+import java.time.format.DateTimeFormatter;
 import java.util.*;
 
 import static ro.unibuc.cti.ColorConstants.*;
@@ -59,7 +60,8 @@ public class Main {
 
                     int optiune = sc.nextInt();
                     switch (optiune) {
-                        case 1: {
+                        // Plasare comanda
+                        case 1 -> {
                             System.out.println(ANSI_YELLOW + "Alegeti un local de la care doriti sa comandati: " + ANSI_RESET);
                             System.out.println("0. Inapoi la meniul principal");
                             List<Local> localuri = platform.getListaLocaluri();
@@ -69,11 +71,11 @@ public class Main {
                             }
                             System.out.print("Introduceti numarul localului: ");
                             int indexLocal = sc.nextInt();
-                            if(indexLocal == 0) {
+                            if (indexLocal == 0) {
                                 continue;
                             }
                             System.out.println();
-                            if(indexLocal > 0 && indexLocal <= localuri.size()) {
+                            if (indexLocal > 0 && indexLocal <= localuri.size()) {
                                 Local localSelectat = localuri.get(indexLocal - 1);
                                 System.out.println(ANSI_GREEN + "Acesta este meniul localului " + ANSI_RED + localSelectat.getNume()
                                         + " " + localSelectat.getPrenume() + ANSI_GREEN + ":" + ANSI_RESET);
@@ -102,11 +104,11 @@ public class Main {
                                 }
 
                                 if (indexulProdusului != 0) {
-                                    while(indexulProdusului != 0) {
+                                    while (indexulProdusului != 0) {
                                         i = 1;
                                         String denumire = "";
                                         for (String prod : localSelectat.getMeniu().keySet()) { // cautarea denumirii produsului
-                                            if(i == indexulProdusului) {
+                                            if (i == indexulProdusului) {
                                                 denumire = prod;
                                                 break;
                                             }
@@ -114,7 +116,7 @@ public class Main {
                                         }
                                         System.out.print("Introduceti cantitatea dorita: ");
                                         int cant = sc.nextInt();
-                                        if (indexulProdusului > localSelectat.getMeniu().size()){
+                                        if (indexulProdusului > localSelectat.getMeniu().size()) {
                                             System.out.println("Index incorect!");
                                         } else {
                                             cmd.put(denumire, cant);
@@ -127,58 +129,78 @@ public class Main {
                                     platform.utilizatorPlaseazaComanda(cmd, localSelectat.getId());
                                 }
                             }
-                            break;
                         }
-                        case 2: {
+
+                        // Istoric comenzi
+                        case 2 -> {
                             List<Comanda> comenzi = platform.utilizatorVeziComenzi();
 
-                            System.out.println("----------------------------------------------------------------------------------------------------------------------------");
+                            System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
                             System.out.println("|" + BOLD + ANSI_GREEN + " NUMAR " + ANSI_RESET + "|" + BOLD + ANSI_GREEN +
                                     "       LOCAL       " + ANSI_RESET + "|" + BOLD + ANSI_GREEN + "        SOFER / NR_INMATRICULARE        " + ANSI_RESET + "|"
                                     + BOLD + ANSI_GREEN + "               PRODUSE                " + ANSI_RESET + "|"
+                                    + BOLD + ANSI_GREEN + "       DATA       " + ANSI_RESET + "|"
                                     + BOLD + ANSI_GREEN + "    STATUS    " + ANSI_RESET + "|");
-                            System.out.println("----------------------------------------------------------------------------------------------------------------------------");
+                            System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
+
+                            comenzi.sort(new Comparator<Comanda>() {
+                                @Override
+                                public int compare(Comanda o1, Comanda o2) {
+                                    return o1.getStatusComanda().ordinal() - o2.getStatusComanda().ordinal();
+                                }
+                            });
+
                             for (Comanda c : comenzi) {
                                 Local l = platform.cautaLocalDupaId(c.getIdLocal());
                                 Sofer s = platform.cautaSoferDupaId(c.getIdSofer());
 
                                 String idComanda = String.valueOf(c.getIdComanda());
                                 String numeLocal = l.getNume() + " " + l.getPrenume();
-                                String numeSofer = s.getNume() + " " + s.getPrenume() + " / " + s.getNrInmatriculare();
+                                String numeSofer = "";
+                                String dataComanda = c.getData().format(DateTimeFormatter.ofPattern("dd / MM / yyyy"));
+                                if (c.getStatusComanda() == Comanda.StatusComanda.IN_LIVRARE || c.getStatusComanda() == Comanda.StatusComanda.FINALIZATA) {
+                                    numeSofer = s.getNume() + " " + s.getPrenume() + " / " + s.getNrInmatriculare();
+                                }
                                 String statusComanda = c.getStatusComanda().toString();
-                                String primulProdus = (String)c.getProduseComandate().keySet().toArray()[0];
+                                String primulProdus = (String) c.getProduseComandate().keySet().toArray()[0];
                                 primulProdus += " x" + c.getProduseComandate().get(primulProdus);
 
+                                System.out.print("| " + padRight(idComanda, 5) + " | " +
+                                        padRight(padLeft(numeLocal, 8 + numeLocal.length() / 2), 17) + " | ");
 
-                                System.out.println("| " + padRight(idComanda, 5) + " | " +
-                                        padRight(padLeft(numeLocal, 8 + numeLocal.length() / 2), 17) + " | " +
-                                        padRight(padLeft(numeSofer, 19 + numeSofer.length() / 2), 38) + " | " +
-                                        padRight(padLeft(primulProdus,
-                                                18 + primulProdus.length() / 2), 36) + " | " +
-                                        padRight(padLeft(statusComanda, 6 + statusComanda.length() / 2), 12) + " |");
+                                if (c.getStatusComanda() == Comanda.StatusComanda.IN_LIVRARE || c.getStatusComanda() == Comanda.StatusComanda.FINALIZATA) {
+                                    System.out.print(padCenter(numeSofer, 38));
+                                } else {
+                                    System.out.print("                                      ");
+                                }
+
+                                System.out.println(" | " + padRight(padLeft(primulProdus, 18 + primulProdus.length() / 2), 36) + " | " +
+                                        padCenter(dataComanda, 16) + " | " +
+                                        padCenter(statusComanda, 12) + " |");
+
                                 boolean first = true;
                                 for (String denProd : c.getProduseComandate().keySet()) {
                                     if (!first) {
                                         String prd = denProd + " x" + c.getProduseComandate().get(denProd);
-                                        System.out.println(
-                                                "|       |                   |                                        | " +
-                                                        padRight(padLeft(prd, 18 + prd.length() / 2), 36)
-                                                        + " |              |"
+                                        System.out.println("|       |                   |                                        | " +
+                                                padCenter(prd, 36)
+                                                + " |                 "
+                                                + " |              |"
                                         );
                                     } else {
                                         first = false;
                                     }
                                 }
-                                System.out.println("----------------------------------------------------------------------------------------------------------------------------");
+                                System.out.println("-----------------------------------------------------------------------------------------------------------------------------------------------");
                             }
-
-                            break;
+                            System.out.println();
                         }
-                        case 3: {
 
-                            break;
+                        // Logout
+                        case 3 -> {
+
                         }
-                        default: {
+                        default -> {
                             System.out.println("Optiune invalida");
                         }
                     }
@@ -277,6 +299,10 @@ public class Main {
 
     public static String padLeft(String s, int n) {
         return String.format("%" + n + "s", s);
+    }
+
+    public static String padCenter(String s, int n) {
+        return padRight(padLeft(s, n / 2 + s.length() / 2), n);
     }
 
 }

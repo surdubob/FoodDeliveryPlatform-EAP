@@ -113,7 +113,7 @@ public class FoodDelivery {
             // TODO: de adaugat validare date
             for (Comanda c : comenzi) {
                 if (c.getIdComanda() == idComanda && c.getIdSofer() == contLogat.getId() && c.getStatusComanda() == Comanda.StatusComanda.PREPARATA) {
-                    c.soferPreiaComanda();
+                    c.soferPreiaComanda(contLogat.getId());
                     return true;
                 } else if(c.getIdComanda() == idComanda) {
                     System.err.println("Comanda nu apartine acestui sofer!");

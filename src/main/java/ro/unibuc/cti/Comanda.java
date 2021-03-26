@@ -1,5 +1,6 @@
 package ro.unibuc.cti;
 
+import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
 import java.util.List;
@@ -9,11 +10,12 @@ public class Comanda {
 
     private static int lastId = 0;
 
-    private int idComanda;
+    private final int idComanda;
     private int idUser;
     private int idLocal;
     private int idSofer;
     private Map<String, Integer> produseComandate;
+    private LocalDate dataPlasarii;
 
     public enum StatusComanda {
         PLASATA, IN_PREPARARE, PREPARATA, IN_LIVRARE, FINALIZATA
@@ -21,42 +23,32 @@ public class Comanda {
 
     private StatusComanda statusComanda = StatusComanda.PLASATA;
 
-    public Comanda(int idUser, int idLocal, int idSofer) {
+    public Comanda(int idUser, int idLocal, int idSofer, StatusComanda sc) {
         this.idUser = idUser;
         this.idLocal = idLocal;
         this.idSofer = idSofer;
         produseComandate = new HashMap<>();
         this.idComanda = lastId++;
+        this.statusComanda = sc;
+        this.dataPlasarii = LocalDate.now();
     }
-    public Comanda(int idComanda, int idUser, int idLocal, int idSofer) {
+
+    public Comanda(int idUser, int idLocal) {
         this.idUser = idUser;
         this.idLocal = idLocal;
-        this.idSofer = idSofer;
         produseComandate = new HashMap<>();
-        this.idComanda = idComanda;
-    }
-
-    public Comanda(int idUser, int idLocal, int idSofer, Map<String, Integer> produseComandate) {
-        this.idUser = idUser;
-        this.idLocal = idLocal;
-        this.idSofer = idSofer;
-        this.produseComandate = produseComandate;
         this.idComanda = lastId++;
+        produseComandate = new HashMap<>();
+        this.dataPlasarii = LocalDate.now();
     }
 
-    public Comanda(int idComanda, int idUser, int idLocal, int idSofer, Map<String, Integer> produseComandate) {
-        this.idUser = idUser;
-        this.idLocal = idLocal;
-        this.idSofer = idSofer;
-        this.produseComandate = produseComandate;
-        this.idComanda = idComanda;
-    }
 
     public Comanda(int idUser, int idLocal, Map<String, Integer> produseComandate) {
         this.idUser = idUser;
         this.idLocal = idLocal;
         this.produseComandate = produseComandate;
         this.idComanda = lastId++;
+        this.dataPlasarii = LocalDate.now();
     }
 
     public Comanda(int idComanda, int idUser, int idLocal, Map<String, Integer> produseComandate, Object giveNullHere) {
@@ -64,14 +56,16 @@ public class Comanda {
         this.idLocal = idLocal;
         this.produseComandate = produseComandate;
         this.idComanda = idComanda;
+        this.dataPlasarii = LocalDate.now();
     }
 
     public void adaugaProdus(String produs, int cantitate) {
         produseComandate.put(produs, cantitate);
     }
 
-    public void soferPreiaComanda() {
+    public void soferPreiaComanda(int idSofer) {
         statusComanda = StatusComanda.IN_LIVRARE;
+        this.idSofer = idSofer;
     }
 
     public Map<String, Integer> getProduseComandate() {
@@ -108,5 +102,9 @@ public class Comanda {
 
     public StatusComanda getStatusComanda() {
         return statusComanda;
+    }
+
+    public LocalDate getData() {
+        return dataPlasarii;
     }
 }
