@@ -205,9 +205,28 @@ public class Main {
                         }
                     }
                 } else if (platform.getContLogat() instanceof Sofer) {
+                    System.out.println("In constructie: vor urma optiunile puse la dispozitie unui sofer.");
+                    System.out.println("1. Logout");
+
+                    int optiune = sc.nextInt();
+                    switch (optiune) {
+                        case 1: {
+                            platform.terminate();
+                            break;
+                        }
+                    }
 
                 } else if (platform.getContLogat() instanceof Local) {
+                    System.out.println("In constructie: vor urma optiunile puse la dispozitie unui local.");
+                    System.out.println("1. Logout");
 
+                    int optiune = sc.nextInt();
+                    switch (optiune) {
+                        case 1: {
+                            platform.terminate();
+                            break;
+                        }
+                    }
                 } else {
                     System.err.println("A aparut o eroare foarte grava si aplicatia trebuie sa se opreasca! O zi buna!");
                     System.exit(0);
@@ -303,6 +322,11 @@ public class Main {
 
     public static String padCenter(String s, int n) {
         return padRight(padLeft(s, n / 2 + s.length() / 2), n);
+    }
+
+    public static void terminateApp() {
+        platform.terminate();
+        System.exit(0);
     }
 
 }

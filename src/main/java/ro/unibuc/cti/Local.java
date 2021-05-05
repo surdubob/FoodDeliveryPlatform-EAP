@@ -1,13 +1,17 @@
 package ro.unibuc.cti;
 
+import com.opencsv.bean.CsvBindByName;
+
 import java.util.HashMap;
 import java.util.Map;
 import java.util.SortedMap;
 import java.util.TreeMap;
 
 public class Local extends Cont {
+    @CsvBindByName(required = true)
     private String adresa;
 
+    @CsvBindByName(required = true)
     private SortedMap<String, Integer> meniu;
 
     public Local(String username, String password, String nume, String prenume, String nrTel, String adresa) { // fara id
@@ -42,5 +46,22 @@ public class Local extends Cont {
 
     public SortedMap<String, Integer> getMeniu() {
         return meniu;
+    }
+
+    public void setMeniu(SortedMap<String, Integer> meniu) {
+        this.meniu = meniu;
+    }
+
+    public String getAdresa() {
+        return adresa;
+    }
+
+    @Override
+    public String toString() {
+        return "Local{" +
+                super.toString() + '\n' +
+                "adresa='" + adresa + '\'' +
+                ", meniu=" + meniu +
+                '}';
     }
 }

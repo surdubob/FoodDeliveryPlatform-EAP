@@ -1,14 +1,32 @@
 package ro.unibuc.cti;
 
+import com.opencsv.bean.CsvBindByName;
+import com.opencsv.bean.CsvBindByPosition;
+
 public class Cont {
     private static int lastId = 0;
 
+    @CsvBindByName(required = true)
     private int id;
+
+    @CsvBindByName(required = true)
     private String username;
+
+    @CsvBindByName(required = true)
     private String password;
+
+    @CsvBindByName(required = true)
     private String nume;
+
+    @CsvBindByName(required = true)
     private String prenume;
+
+    @CsvBindByName(required = true)
     private String nrTel;
+
+    public Cont(){
+
+    }
 
     public Cont(String username, String password, String nume, String prenume, String nrTel) {
         this.username = username;
@@ -72,5 +90,17 @@ public class Cont {
 
     public void setNrTel(String nrTel) {
         this.nrTel = nrTel;
+    }
+
+    @Override
+    public String toString() {
+        return "Cont{" +
+                "id=" + id +
+                ", username='" + username + '\'' +
+                ", password='" + password + '\'' +
+                ", nume='" + nume + '\'' +
+                ", prenume='" + prenume + '\'' +
+                ", nrTel='" + nrTel + '\'' +
+                '}';
     }
 }

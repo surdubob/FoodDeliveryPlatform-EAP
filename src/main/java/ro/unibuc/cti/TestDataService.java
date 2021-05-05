@@ -40,4 +40,14 @@ public class TestDataService implements FoodDeliveryDataService {
         comenzi.get(1).adaugaProdus("Shaorma cu de toate mica", 3);
         return comenzi;
     }
+
+    @Override
+    public void writeConturi(List<Cont> listaConturi) {
+        return;
+    }
+
+    @Override
+    public void writeComenzi(List<Comanda> listaComenzi) {
+        return;
+    }
 }

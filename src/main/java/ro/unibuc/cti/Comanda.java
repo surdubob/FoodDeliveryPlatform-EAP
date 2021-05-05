@@ -1,5 +1,7 @@
 package ro.unibuc.cti;
 
+import com.opencsv.bean.CsvBindByPosition;
+
 import java.time.LocalDate;
 import java.util.ArrayList;
 import java.util.HashMap;
@@ -11,10 +13,15 @@ public class Comanda {
     private static int lastId = 0;
 
     private final int idComanda;
+
     private int idUser;
+
     private int idLocal;
+
     private int idSofer;
+
     private Map<String, Integer> produseComandate;
+
     private LocalDate dataPlasarii;
 
     public enum StatusComanda {
@@ -106,5 +113,26 @@ public class Comanda {
 
     public LocalDate getData() {
         return dataPlasarii;
+    }
+
+    public static void setLastId(int lastId) {
+        Comanda.lastId = lastId;
+    }
+
+    public static int getLastId() {
+        return lastId;
+    }
+
+    @Override
+    public String toString() {
+        return "Comanda{" +
+                "idComanda=" + idComanda +
+                ", idUser=" + idUser +
+                ", idLocal=" + idLocal +
+                ", idSofer=" + idSofer +
+                ", produseComandate=" + produseComandate +
+                ", dataPlasarii=" + dataPlasarii +
+                ", statusComanda=" + statusComanda +
+                '}';
     }
 }

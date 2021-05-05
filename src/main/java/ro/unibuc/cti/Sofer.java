@@ -1,9 +1,21 @@
 package ro.unibuc.cti;
 
+import com.opencsv.bean.CsvBindByName;
+
 public class Sofer extends Cont {
+
+    @CsvBindByName(required = true)
     private String nrInmatriculare;
+
+    @CsvBindByName(required = true)
     private String vehicul;
+
+    @CsvBindByName(required = true)
     private String oras;
+
+    public Sofer() {
+
+    }
 
     public Sofer(String username, String password, String nume, String prenume, String nrTel, String oras, String nrInmatriculare, String vehicul) {
         super(username, password, nume, prenume, nrTel);
@@ -29,6 +41,10 @@ public class Sofer extends Cont {
 
     public String getVehicul() {
         return vehicul;
+    }
+
+    public String getOras() {
+        return oras;
     }
 
     public void setVehicul(String vehicul) {
