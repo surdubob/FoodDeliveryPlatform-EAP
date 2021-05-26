@@ -19,7 +19,8 @@ public class FoodDelivery {
 
 
     public FoodDelivery() {
-        dataService = CSVService.getInstance(); // Se va schimba in functie de provenienta datelor cu clase care implementeaza FoodDeliveryDataService
+        dataService = JDBCService.getInstance(); // Se va schimba in functie de provenienta datelor cu clase care implementeaza FoodDeliveryDataService
+
         conturi = dataService.readConturi();
         comenzi = dataService.readComenzi();
 
@@ -50,6 +51,7 @@ public class FoodDelivery {
     public boolean inregistreazaUtilizatorNou(String username, String password, String nume, String prenume, String nrTel, String adresa) {
         // TODO: de adaugat verificari pentru validitatea datelor
         conturi.add(new Utilizator(username, password, nume, prenume, nrTel, adresa));
+        login(username, password);
         writeLog("inregistreazaUtilizatorNou");
         return true;
     }
@@ -57,6 +59,7 @@ public class FoodDelivery {
     public boolean inregistreazaLocalNou(String username, String password, String nume, String prenume, String nrTel, String adresa) {
         // TODO: de adaugat verificari pentru validitatea datelor
         conturi.add(new Local(username, password, nume, prenume, nrTel, adresa));
+        login(username, password);
         writeLog("inregistreazaLocalNou");
         return true;
     }
@@ -64,6 +67,7 @@ public class FoodDelivery {
     public boolean inregistreazaSoferNou(String username, String password, String nume, String prenume, String nrTel, String oras, String nrInmatriculare, String vehicul) {
         // TODO: de adaugat verificari pentru validitatea datelor
         conturi.add(new Sofer(username, password, nume, prenume, nrTel, oras, nrInmatriculare, vehicul));
+        login(username, password);
         writeLog("inregistreazaSoferNou");
         return true;
     }
@@ -169,8 +173,8 @@ public class FoodDelivery {
     }
 
     public void terminate() {
-        dataService.writeComenzi(comenzi);
         dataService.writeConturi(conturi);
+        dataService.writeComenzi(comenzi);
         writeLog("Aplicatia se inchide");
         System.exit(0);
     }
